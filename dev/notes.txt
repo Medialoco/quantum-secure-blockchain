@@ -1,0 +1,10 @@
+npm install --global hardhat
+npx hardhat
+
+pip install qiskit
+pip install qiskit-aer
+
+npx hardhat node
+npx hardhat run scripts/setQuantum.js --network localhost
+
+

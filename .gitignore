@@ -1,0 +1,49 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Hardhat build output
+artifacts/
+cache/
+coverage/
+coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+ignition/deployments/chain-31337
+
+# TypeChain generated types
+typechain/
+typechain-types/
+
+# Python cache & venv
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+venv/
+pip-log.txt
+
+# Jupyter notebooks
+.ipynb_checkpoints
+
+# Quantum JSON outputs
+quantum_event.json
+quantum_proof.json
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.log
