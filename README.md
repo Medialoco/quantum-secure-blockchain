@@ -3,8 +3,7 @@
 This repository contains the source code and prototype implementation for the paper:
 
 **"Quantum-Backed Integrity for Industrial Blockchain Events: A Secure Logging Framework Using Qiskit and Ethereum"**  
-📅 Submitted to: [QIS Conference 2025](https://conference-questis.org/) (accepted)
-👤 Author: Benoît Prieur, Medialoco LLC  
+📅 Submitted to: [QIS Conference 2025](https://conference-questis.org/) (accepted)  
 
 ---
 
