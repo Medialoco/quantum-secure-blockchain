@@ -119,4 +119,4 @@ This repo is a foundational prototype. Future versions may include:
 
 ## 📝 License
 
-MIT – © 2025, Medialoco LLC
+MIT – © 2025, Medialoco
