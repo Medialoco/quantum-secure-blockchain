@@ -115,8 +115,4 @@ This repo is a foundational prototype. Future versions may include:
 - Public blockchain deployment (e.g., Sepolia, Polygon),
 - Event indexing with The Graph.
 
----
-
-## 📝 License
-
 MIT – © 2025, Medialoco
