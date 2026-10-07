@@ -88,11 +88,14 @@ h1 {
   max-width: 12ch;
 }
 
-.kicker, .lead, .cite, .quiet, figcaption, .scope, .label {
+.tags, .cite, .quiet, .label {
   font-family: ui-sans-serif, "Avenir Next", "Segoe UI", sans-serif;
 }
 
-.kicker {
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
   margin: 18px 0 0;
   color: var(--red);
   letter-spacing: 0.04em;
@@ -100,7 +103,8 @@ h1 {
   font-weight: 700;
 }
 
-.lead { font-size: 1.12rem; max-width: 62ch; }
+.tags a { color: inherit; text-decoration: none; }
+.tags a:hover { text-decoration: underline; }
 
 .cite {
   display: flex;
