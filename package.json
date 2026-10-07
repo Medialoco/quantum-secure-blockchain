@@ -1,14 +1,16 @@
 {
   "name": "quantum-secure-blockchain",
   "version": "1.0.0",
+  "private": true,
+  "description": "Companion code for Prieur, QUEST-IS 2025 (CCIS 2744): a Qiskit QRNG and a local Ethereum event log.",
   "scripts": {
-    "test": "echo \"No tests yet\""
+    "test": "hardhat test && node --test tests/browser-qrng.test.js",
+    "log": "hardhat run scripts/setQuantum.js",
+    "demo": "python3 -m http.server 4173 -d docs"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.19"
   },
-  "dependencies": {
-    "web3": "^4.16.0"
-  }
+  "license": "MIT"
 }

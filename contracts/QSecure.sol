@@ -1,52 +1,118 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.28;
 
-/// @title Quantum-Secured Industrial Event Logger
-/// @author 
-/// @notice Stores quantum-proofed industrial events with SHA-256 integrity verification
+/// @title Quantum-backed industrial event logger
+/// @author Benoît Prieur, Medialoco LLC
+/// @notice Companion contract for "Quantum-Backed Integrity for Industrial
+///         Blockchain Events" (QUEST-IS 2025, CCIS 2744, pp. 346–351).
+///         Each event keeps a timestamp, a QRNG tag, metadata, and the SHA-256
+///         fingerprint of those three fields. The fingerprint is recomputed
+///         on-chain, so a hash that does not match the stored fields is rejected.
 contract QSecure {
-    address public owner;
+    address public immutable owner;
 
-    /// @notice Struct to represent a secured event
-    struct Event {
-        uint256 timestamp;        // Blockchain timestamp
-        uint256 quantumProof;     // Quantum-generated proof (Qiskit QRNG)
-        string metadata;          // Descriptive event details
-        bytes32 eventHash;        // SHA-256 hash (integrity proof)
+    struct EventRecord {
+        uint256 timestamp;
+        uint256 quantumProof;
+        string metadata;
+        bytes32 eventHash;
+        uint256 loggedAt;
     }
 
-    /// @notice Array storing all secured events
-    Event[] public events;
+    EventRecord[] private _events;
 
-    /// @notice Constructor, sets contract deployer as owner
+    event EventRecorded(
+        uint256 indexed id,
+        uint256 timestamp,
+        uint256 quantumProof,
+        bytes32 eventHash
+    );
+
+    error NotOwner();
+    error EmptyMetadata();
+    error UnknownEvent(uint256 index);
+
     constructor() {
         owner = msg.sender;
     }
 
-    /// @notice Record a quantum-secured industrial event
-    /// @param _quantumProof Quantum-generated integer proof
-    /// @param _metadata Description of the event (checkpoint, batch ID, etc.)
-    /// @param _eventHash SHA-256 integrity hash of event data
+    /// @notice Log one industrial event. `timestamp` is the event time, in Unix seconds.
+    ///         `loggedAt` is the chain time of this transaction and is not part of the hash.
     function recordEvent(
-        uint256 _quantumProof,
-        string calldata _metadata,
-        bytes32 _eventHash
-    ) external {
-        require(msg.sender == owner, "Only owner can record");
-        events.push(Event(block.timestamp, _quantumProof, _metadata, _eventHash));
+        uint256 timestamp,
+        uint256 quantumProof,
+        string calldata metadata
+    ) external returns (uint256 id, bytes32 eventHash) {
+        if (msg.sender != owner) revert NotOwner();
+        if (bytes(metadata).length == 0) revert EmptyMetadata();
+
+        eventHash = fingerprint(timestamp, quantumProof, metadata);
+        id = _events.length;
+        _events.push(
+            EventRecord({
+                timestamp: timestamp,
+                quantumProof: quantumProof,
+                metadata: metadata,
+                eventHash: eventHash,
+                loggedAt: block.timestamp
+            })
+        );
+        emit EventRecorded(id, timestamp, quantumProof, eventHash);
     }
 
-    /// @notice Retrieve an event by index
-    /// @param index Index of the event
-    /// @return Entire event struct
-    function getEvent(uint index) public view returns (Event memory) {
-        require(index < events.length, "Invalid index");
-        return events[index];
+    /// @notice UTF-8 message whose SHA-256 is the event fingerprint.
+    ///         Layout: decimal(timestamp) "|" decimal(quantumProof) "|" metadata
+    function canonicalPayload(
+        uint256 timestamp,
+        uint256 quantumProof,
+        string memory metadata
+    ) public pure returns (string memory) {
+        return string.concat(_toString(timestamp), "|", _toString(quantumProof), "|", metadata);
     }
 
-    /// @notice Get total number of recorded events
-    /// @return Total events count
-    function totalEvents() public view returns (uint256) {
-        return events.length;
+    function fingerprint(
+        uint256 timestamp,
+        uint256 quantumProof,
+        string memory metadata
+    ) public pure returns (bytes32) {
+        return sha256(bytes(canonicalPayload(timestamp, quantumProof, metadata)));
+    }
+
+    /// @notice Named readEvent rather than getEvent: ethers.js reserves getEvent
+    ///         for looking up a Solidity event fragment.
+    function readEvent(uint256 index) external view returns (EventRecord memory) {
+        return _at(index);
+    }
+
+    function totalEvents() external view returns (uint256) {
+        return _events.length;
+    }
+
+    /// @notice Recomputes the fingerprint from the stored fields.
+    function verify(uint256 index) external view returns (bool) {
+        EventRecord memory item = _at(index);
+        return item.eventHash == fingerprint(item.timestamp, item.quantumProof, item.metadata);
+    }
+
+    function _at(uint256 index) private view returns (EventRecord memory) {
+        if (index >= _events.length) revert UnknownEvent(index);
+        return _events[index];
+    }
+
+    function _toString(uint256 value) private pure returns (string memory) {
+        if (value == 0) return "0";
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + (value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
     }
 }

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quantum-backed integrity — companion</title>
+    <meta
+      name="description"
+      content="Browser execution of the QUEST-IS 2025 logging pipeline: an 8-qubit Hadamard QRNG, a SHA-256 fingerprint, and a local event ledger."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23b4332a'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia' font-size='18' fill='white'%3EH%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <p class="brand">Medialoco <span>companion</span></p>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main>
+      <p class="kicker" data-i18n="kicker"></p>
+      <h1 data-i18n="title"></h1>
+      <p class="lead" data-i18n="lead"></p>
+      <p class="cite">
+        <a href="https://doi.org/10.1007/978-3-032-13855-2_32">10.1007/978-3-032-13855-2_32</a>
+        <span>QUEST-IS 2025 · CCIS 2744 · pp. 346–351</span>
+      </p>
+
+      <ol class="pipeline">
+        <li><span>01</span> <em data-i18n="step1"></em></li>
+        <li><span>02</span> <em data-i18n="step2"></em></li>
+        <li><span>03</span> <em data-i18n="step3"></em></li>
+      </ol>
+
+      <section class="panel" aria-labelledby="circuit-title">
+        <div class="panel-head">
+          <h2 id="circuit-title" data-i18n="circuitTitle"></h2>
+          <button id="measure" type="button" data-i18n="measure"></button>
+        </div>
+        <figure>
+          <img src="quantum_circuit.png" width="720" alt="Eight-qubit circuit: Hadamard on each qubit, then computational-basis measurement." />
+          <figcaption data-i18n="circuitCaption"></figcaption>
+        </figure>
+        <div id="shot" class="shot" hidden>
+          <div>
+            <p class="label" data-i18n="bitsLabel"></p>
+            <ol id="bits" class="bits"></ol>
+          </div>
+          <div>
+            <p class="label" data-i18n="valueLabel"></p>
+            <p id="value" class="value"></p>
+          </div>
+          <p id="deviation" class="quiet"></p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="hash-title">
+        <h2 id="hash-title" data-i18n="hashTitle"></h2>
+        <div class="fields">
+          <label>
+            <span data-i18n="metaLabel"></span>
+            <input id="metadata" type="text" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>
+            <span data-i18n="timeLabel"></span>
+            <input id="timestamp" type="number" min="0" step="1" inputmode="numeric" />
+          </label>
+        </div>
+        <div class="fingerprint">
+          <p class="label" data-i18n="payloadLabel"></p>
+          <pre id="payload">—</pre>
+          <p class="label" data-i18n="hashLabel"></p>
+          <pre id="hash">—</pre>
+        </div>
+        <button id="record" type="button" data-i18n="record" disabled></button>
+        <p id="form-error" class="error" role="alert"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="ledger-title">
+        <div class="panel-head">
+          <h2 id="ledger-title" data-i18n="ledgerTitle"></h2>
+          <button id="reset" type="button" class="ghost" data-i18n="reset"></button>
+        </div>
+        <p class="quiet" data-i18n="ledgerHint"></p>
+        <div id="ledger"></div>
+      </section>
+
+      <aside class="scope" data-i18n="scope"></aside>
+    </main>
+
+    <p id="selftest" class="selftest" hidden></p>
+    <script src="qrng.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

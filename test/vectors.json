@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": 1744230722,
+    "quantumProof": 214,
+    "metadata": "Component validated - Checkpoint A",
+    "sha256": "3fdde02648272556e7f8b9a6e1c4e801780e1dbe2541da1eec352d6107d524c3"
+  },
+  {
+    "timestamp": 1744230722,
+    "quantumProof": 214,
+    "metadata": "Component validated – Checkpoint A",
+    "sha256": "69b3071d6a4f0be21f3e8bed2e87be721adb6b3cf7386db51c9b1f1ca94daa37"
+  },
+  {
+    "timestamp": 1700000000,
+    "quantumProof": 255,
+    "metadata": "Contrôle — lot 14",
+    "sha256": "a31a681726d03c01e432784c16bf2be059131edcd1e9fa5dcd5e27bc87fd9b10"
+  }
+]

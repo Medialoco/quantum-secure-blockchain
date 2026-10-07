@@ -1,118 +1,101 @@
-# Quantum-Secure Blockchain Logging
+# Quantum-Backed Integrity for Industrial Blockchain Events
 
-This repository contains the source code and prototype implementation for the paper:
+Companion de l’article. Le dépôt reste privé tant que cette version n’est pas figée.
 
-**"Quantum-Backed Integrity for Industrial Blockchain Events: A Secure Logging Framework Using Qiskit and Ethereum"**  
-📅 Submitted to: [QIS Conference 2025](https://conference-questis.org/) (accepted + published paper in the Springer proceedings)  
+Reference implementation of:
 
----
+> Benoît Prieur (2026). *Quantum-Backed Integrity for Industrial Blockchain Events: A Secure Logging Framework Using Qiskit and Ethereum.* In Frédéric Barbaresco and François Gerin (eds), *Quantum Engineering Sciences and Technologies for Industry and Services*, QUEST-IS 2025. Communications in Computer and Information Science, vol. 2744, pp. 346–351. Springer, Cham.  
+> [https://doi.org/10.1007/978-3-032-13855-2_32](https://doi.org/10.1007/978-3-032-13855-2_32)
 
-## 🧠 Project Overview
+Presented on 2 December 2025 at [QUEST-IS](https://conference-questis.org/quest-is-2025/program/2nd-december-2025/), EDF Lab Paris-Saclay.
 
-This proof-of-concept demonstrates a secure logging pipeline where each recorded event:
-- is seeded with quantum-generated entropy using **IBM Qiskit**,
-- is hashed with **SHA-256** for tamper detection,
-- and is immutably stored via a **Solidity smart contract** on a local **Ethereum blockchain** powered by **Hardhat**.
+## Pipeline
 
-The aim is to enhance data authenticity and traceability in industrial systems by fusing quantum physics and blockchain technologies.
+Each industrial event carries three fields. Their UTF-8 concatenation is hashed with SHA-256, and the hash is stored on a local Ethereum chain.
 
----
-
-## 🛠️ Technologies Used
-
-- [Qiskit](https://qiskit.org/) – for quantum random number generation (QRNG)
-- [Node.js](https://nodejs.org/) + [Web3.js](https://web3js.readthedocs.io/) – for blockchain interaction
-- [Hardhat](https://hardhat.org/) – for smart contract development and local Ethereum simulation
-- [Solidity](https://soliditylang.org/) – for smart contract implementation
-- [Python](https://www.python.org/) – for quantum circuit execution and entropy export
-
----
-
-## ⚙️ Local Setup & Usage
-
-Make sure you have both **Python 3** and **Node.js** installed.
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/Medialoco/quantum-secure-blockchain.git
-cd quantum-secure-blockchain
+```text
+timestamp | quantumProof | metadata
+                         │
+                         ▼
+                     SHA-256
+                         │
+                         ▼
+              QSecure.recordEvent(...)
 ```
 
-### 2. Install dependencies
+`timestamp` is the event time, in Unix seconds. `quantumProof` is one shot of an 8-qubit circuit: a Hadamard on every qubit, then a computational-basis measurement. `metadata` is the industrial description, kept as text. The contract recomputes the fingerprint with the SHA-256 precompile and stores it with the three fields. `loggedAt` is `block.timestamp`, the moment the transaction is included. It is not part of the hash.
+
+Qiskit prints the bitstring with qubit 0 on the right. The integer is that bitstring read as a binary number. The browser demo uses the same convention.
+
+## What the code does, and what it does not
+
+The circuit is the prepare-and-measure QRNG described in the paper. The default backend is the Qiskit Aer simulator. The browser page simulates the same ideal circuit and samples the Born distribution with the Web Crypto generator. Both are classical executions of the circuit. A run on a quantum processor would use the same gate sequence; this repository does not ship a hardware backend.
+
+The chain is a local Hardhat network. Nothing in the default path is broadcast to Ethereum mainnet or to a public testnet.
+
+## Canonical fingerprint
+
+```text
+SHA-256( UTF-8( decimal(timestamp) + "|" + decimal(quantumProof) + "|" + metadata ) )
+```
+
+Decimal fields have no leading zeros. The separator is the ASCII vertical bar. Metadata is taken as-is, including spaces and non-ASCII characters. `test/vectors.json` freezes three messages, including one that differs only by a hyphen versus an en dash.
+
+## Run the reference pipeline
+
+Python 3.12 and Node.js 20 are the versions used to check this repository. Qiskit 2.5 does not target Python 3.14.
 
 ```bash
-# Python (QRNG)
+python3.12 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 
-# Node.js / Hardhat
 npm install
+npm test
+npm run log
 ```
 
-### 3. Start the local blockchain node (Terminal 1)
+`npm run log` deploys `QSecure` on Hardhat’s in-process network, draws one Aer shot, records the event, checks the on-chain fingerprint against the local SHA-256, and writes `quantum_event.json`. That file is a run artifact and is not committed.
+
+To keep the chain process alive and deploy against it:
 
 ```bash
 npx hardhat node
-```
-
-Leave this terminal open — it runs the local Ethereum blockchain.
-
-### 4. Run the event logging script (Terminal 2)
-
-In a second terminal:
-
-```bash
 npx hardhat run scripts/setQuantum.js --network localhost
 ```
 
-This will:
-- Run a Qiskit quantum circuit to generate a random number,
-- Construct a SHA-256 hash of the event (quantum value + metadata + timestamp),
-- Store the event via a smart contract on the local chain,
-- Retrieve and print the event for verification,
-- Save the result to `quantum_event.json`.
+Override the event fields with `EVENT_METADATA` and `EVENT_TIMESTAMP`. Override the interpreter with `QRNG_PYTHON` if `.venv/bin/python` is not the one you want.
 
----
-
-## 📂 Project Structure
-
-```
-├── contracts/
-│   └── QSecure.sol               # Solidity smart contract
-├── scripts/
-│   └── setQuantum.js            # Main script for quantum generation and event logging
-├── qrng.py                      # Quantum circuit for QRNG (Qiskit)
-├── quantum_proof.json           # Output: raw quantum proof
-├── quantum_event.json           # Output: stored event details
-├── requirements.txt             # Python dependencies
-├── README.md
-```
-
----
-
-## 🧪 Example Output
+The Python checks:
 
 ```bash
-✅ QSecure deployed at: 0x...
-🎲 Quantum-generated number: 214
-🔒 SHA-256 event hash: ...
-📊 Total events recorded: 1
-📦 Event details:
-  ⏱️ Timestamp      : 1744230722
-  🧬 Quantum Proof  : 214
-  📋 Metadata       : Component validated – Checkpoint A
-  🔒 Stored SHA-256 : ...
-💾 Event details saved to quantum_event.json
+.venv/bin/python -m unittest tests.test_qrng
 ```
 
----
+## Browser execution
 
-## 📌 Future Work
+`docs/` is the same pipeline without a local chain. Open it over HTTP so `crypto.subtle` is available. `http://localhost` qualifies; opening the file directly does not.
 
-This repo is a foundational prototype. Future versions may include:
-- Real quantum backend integration (IBM Q Cloud),
-- Digital signatures for authentication,
-- Public blockchain deployment (e.g., Sepolia, Polygon),
-- Event indexing with The Graph.
+```bash
+npm run demo
+```
 
-MIT – © 2025, Medialoco
+Then visit [http://localhost:4173](http://localhost:4173). Measure one shot, edit the metadata or the timestamp, and anchor the event. Changing the stored metadata in the ledger recomputes the fingerprint and shows the mismatch. The ledger stays in the browser.
+
+GitHub Pages is set up to be published from `docs/` on `main`, but it is not enabled. On a Team plan, a Pages site built from a private repository is still a public URL. It stays off while this repository is private.
+
+## Layout
+
+```text
+contracts/QSecure.sol          event log and on-chain SHA-256
+qrng.py                        Qiskit Aer shot
+scripts/setQuantum.js          deploy, log, compare fingerprints
+docs/                          browser execution of the same rules
+test/                          contract tests and frozen SHA-256 vectors
+tests/                         Aer shot and the browser fingerprint checks
+circuits/quantum_circuit.png   the 8-qubit figure
+```
+
+## License
+
+MIT. Cite the paper if you use the code. See `CITATION.cff`.

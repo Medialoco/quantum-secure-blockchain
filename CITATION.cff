@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+title: "Quantum-Backed Integrity for Industrial Blockchain Events: companion code"
+message: "If you use this software, please cite the paper."
+type: software
+authors:
+  - family-names: Prieur
+    given-names: Benoît
+    affiliation: Medialoco LLC
+    orcid: "https://orcid.org/0000-0003-0786-0049"
+repository-code: "https://github.com/Medialoco/quantum-secure-blockchain"
+license: MIT
+keywords:
+  - QRNG
+  - Qiskit
+  - Ethereum
+  - industrial event logging
+preferred-citation:
+  type: conference-paper
+  title: "Quantum-Backed Integrity for Industrial Blockchain Events: A Secure Logging Framework Using Qiskit and Ethereum"
+  authors:
+    - family-names: Prieur
+      given-names: Benoît
+      affiliation: Medialoco LLC
+  year: 2026
+  collection-title: "Quantum Engineering Sciences and Technologies for Industry and Services"
+  conference:
+    name: "QUEST-IS 2025"
+    date-start: 2025-12-02
+    date-end: 2025-12-02
+    city: "Paris-Saclay"
+    country: FR
+  publisher:
+    name: Springer
+  volume: 2744
+  volume-title: "Communications in Computer and Information Science"
+  start: 346
+  end: 351
+  doi: "10.1007/978-3-032-13855-2_32"
+  isbn: "978-3-032-13855-2"
