@@ -1,6 +1,6 @@
 const COPY = {
   fr: {
-    kicker: "Exécution dans le navigateur",
+    kicker: "Chapter Companion",
     title: "Intégrité des événements industriels, adossée à un aléa quantique",
     lead: "Le pipeline de l’article, exécuté ici : un tirage sur le circuit QRNG, l’empreinte SHA-256 du triplet horodatage, preuve et métadonnée, puis l’ancrage dans un registre.",
     step1: "Circuit",
@@ -38,7 +38,7 @@ const COPY = {
     selftestFail: "self-test en échec",
   },
   en: {
-    kicker: "Browser execution",
+    kicker: "Chapter Companion",
     title: "Quantum-backed integrity for industrial blockchain events",
     lead: "The paper’s pipeline, running here: one shot of the QRNG circuit, the SHA-256 fingerprint of timestamp, proof and metadata, then a ledger entry.",
     step1: "Circuit",
@@ -82,7 +82,7 @@ const STORAGE_KEY = "qsecure-ledger-v1";
 
 function storedLang() {
   try {
-    return localStorage.getItem("qsecure-lang");
+    return localStorage.getItem("qsecure-lang-v2");
   } catch {
     return null;
   }
@@ -90,7 +90,7 @@ function storedLang() {
 
 const requestedLang = new URLSearchParams(location.search).get("lang");
 const state = {
-  lang: requestedLang === "fr" || requestedLang === "en" ? requestedLang : storedLang() || "fr",
+  lang: requestedLang === "fr" || requestedLang === "en" ? requestedLang : storedLang() || "en",
   shot: null,
   ledger: loadLedger(),
 };
@@ -127,7 +127,7 @@ function applyLanguage() {
     button.setAttribute("aria-pressed", String(button.dataset.lang === state.lang));
   });
   try {
-    localStorage.setItem("qsecure-lang", state.lang);
+    localStorage.setItem("qsecure-lang-v2", state.lang);
   } catch {
     /* Language still switches for this page view. */
   }

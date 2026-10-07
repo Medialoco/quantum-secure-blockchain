@@ -1,6 +1,6 @@
 # Quantum-Backed Integrity for Industrial Blockchain Events
 
-Companion de l’article. Le dépôt reste privé tant que cette version n’est pas figée.
+Chapter Companion du chapitre Springer. Le dépôt reste privé.
 
 Reference implementation of:
 
@@ -72,17 +72,19 @@ The Python checks:
 .venv/bin/python -m unittest tests.test_qrng
 ```
 
-## Browser execution
+## Chapter Companion
 
-`docs/` is the same pipeline without a local chain. Open it over HTTP so `crypto.subtle` is available. `http://localhost` qualifies; opening the file directly does not.
+The page in `docs/` runs the same pipeline in the browser, without Qiskit or a local chain. It is published at [https://medialoco.github.io/quantum-secure-blockchain/](https://medialoco.github.io/quantum-secure-blockchain/).
+
+To open the same page on this machine:
 
 ```bash
 npm run demo
 ```
 
-Then visit [http://localhost:4173](http://localhost:4173). Measure one shot, edit the metadata or the timestamp, and anchor the event. Changing the stored metadata in the ledger recomputes the fingerprint and shows the mismatch. The ledger stays in the browser.
+Then visit [http://127.0.0.1:4173](http://127.0.0.1:4173). Measure one shot, edit the metadata or the timestamp, and anchor the event. Changing the stored metadata in the ledger recomputes the fingerprint and shows the mismatch. The ledger stays in the browser.
 
-GitHub Pages is set up to be published from `docs/` on `main`, but it is not enabled. On a Team plan, a Pages site built from a private repository is still a public URL. It stays off while this repository is private.
+`npm run log` still needs Python and Hardhat on your machine. GitHub Pages only serves the Chapter Companion.
 
 ## Layout
 
@@ -90,7 +92,7 @@ GitHub Pages is set up to be published from `docs/` on `main`, but it is not ena
 contracts/QSecure.sol          event log and on-chain SHA-256
 qrng.py                        Qiskit Aer shot
 scripts/setQuantum.js          deploy, log, compare fingerprints
-docs/                          browser execution of the same rules
+docs/                          Chapter Companion, the browser pipeline
 test/                          contract tests and frozen SHA-256 vectors
 tests/                         Aer shot and the browser fingerprint checks
 circuits/quantum_circuit.png   the 8-qubit figure
