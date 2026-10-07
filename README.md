@@ -7,7 +7,7 @@ Chapter Companion du chapitre Springer. Le code Qiskit et Ethereum n’est pas m
 > Benoît Prieur (2026). *Quantum-Backed Integrity for Industrial Blockchain Events: A Secure Logging Framework Using Qiskit and Ethereum.* In Frédéric Barbaresco and François Gerin (eds), *Quantum Engineering Sciences and Technologies for Industry and Services*, QUEST-IS 2025. Communications in Computer and Information Science, vol. 2744, pp. 346–351. Springer, Cham.  
 > [https://doi.org/10.1007/978-3-032-13855-2_32](https://doi.org/10.1007/978-3-032-13855-2_32)
 
-Presented on 2 December 2025 at [QUEST-IS](https://conference-questis.org/quest-is-2025/program/2nd-december-2025/), EDF Lab Paris-Saclay.
+[QUEST-IS](https://conference-questis.org/quest-is-2025/program/2nd-december-2025/), EDF Lab Paris-Saclay.
 
 The live demo is [https://medialoco.github.io/quantum-secure-blockchain/](https://medialoco.github.io/quantum-secure-blockchain/). This page matches [chapter-companion-0.1.2](https://github.com/Medialoco/quantum-secure-blockchain/tree/chapter-companion-0.1.2). The circuit library is [RustQIP](https://github.com/Renmusxd/RustQIP).
 
