@@ -9,7 +9,7 @@ Chapter Companion du chapitre Springer. Le code Qiskit et Ethereum n’est pas m
 
 Presented on 2 December 2025 at [QUEST-IS](https://conference-questis.org/quest-is-2025/program/2nd-december-2025/), EDF Lab Paris-Saclay.
 
-The live demo is [https://medialoco.github.io/quantum-secure-blockchain/](https://medialoco.github.io/quantum-secure-blockchain/). The repository stays private. The Pages URL is public, because the Team plan cannot host a private site.
+The live demo is [https://medialoco.github.io/quantum-secure-blockchain/](https://medialoco.github.io/quantum-secure-blockchain/). This page matches [chapter-companion-0.1.1](https://github.com/Medialoco/quantum-secure-blockchain/tree/chapter-companion-0.1.1). The circuit library is [RustQIP](https://github.com/Renmusxd/RustQIP). The repository stays private. The Pages URL is public, because the Team plan cannot host a private site.
 
 ## Two trees
 
@@ -73,7 +73,7 @@ Then open [http://127.0.0.1:4173](http://127.0.0.1:4173). `docs/pkg/` is the bui
 
 ## Releases
 
-Demo releases are tagged `chapter-companion-x.y.z` and described on the GitHub Releases page. They package this demo. They do not version the chapter’s Qiskit and Hardhat tree.
+Demo releases are tagged `chapter-companion-x.y.z`. The page links to the tag it was built from. These tags package the demo. They do not version the chapter’s Qiskit and Hardhat tree.
 
 ## Layout
 

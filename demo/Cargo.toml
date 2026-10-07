@@ -1,8 +1,8 @@
 [package]
 name = "chapter-companion"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-description = "Chapter Companion demo: a RustQIP measurement and a Rust ledger, compiled to WebAssembly."
+description = "Chapter Companion demo: a RustQIP measurement and its SHA-256 fingerprint, compiled to WebAssembly."
 license = "MIT"
 publish = false
 
