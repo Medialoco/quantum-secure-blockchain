@@ -1,3 +1,6 @@
+# Rust build output
+demo/target/
+
 # Node dependencies
 node_modules/
 npm-debug.log*

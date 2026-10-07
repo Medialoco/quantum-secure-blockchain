@@ -1,0 +1,16 @@
+{
+  "name": "chapter-companion",
+  "description": "Chapter Companion demo: a RustQIP measurement and a Rust ledger, compiled to WebAssembly.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "files": [
+    "chapter_companion_bg.wasm",
+    "chapter_companion.js",
+    "chapter_companion.d.ts"
+  ],
+  "module": "chapter_companion.js",
+  "types": "chapter_companion.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

@@ -1,0 +1,22 @@
+[package]
+name = "chapter-companion"
+version = "0.1.0"
+edition = "2021"
+description = "Chapter Companion demo: a RustQIP measurement and a Rust ledger, compiled to WebAssembly."
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+hex = "0.4"
+qip = "1.5.0"
+sha2 = "0.10"
+wasm-bindgen = "0.2"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.3", features = ["wasm_js"] }
+
+[dev-dependencies]
+serde_json = "1"

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Chapter Companion — Quantum-Backed Integrity</title>
+    <title>Chapter Companion</title>
     <meta
       name="description"
-      content="Chapter Companion for the QUEST-IS 2025 paper: an 8-qubit Hadamard QRNG, a SHA-256 fingerprint, and a local event ledger."
+      content="Chapter Companion for the QUEST-IS 2025 chapter. The demo runs RustQIP in WebAssembly beside the original Qiskit and Ethereum code."
     />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23b4332a'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia' font-size='18' fill='white'%3EH%3C/text%3E%3C/svg%3E" />
     <link rel="stylesheet" href="styles.css" />
@@ -21,7 +21,7 @@
     </header>
 
     <main>
-      <p class="kicker" data-i18n="kicker"></p>
+      <p class="kicker">#ChapterCompanion</p>
       <h1 data-i18n="title"></h1>
       <p class="lead" data-i18n="lead"></p>
       <p class="cite">
@@ -92,7 +92,6 @@
     </main>
 
     <p id="selftest" class="selftest" hidden></p>
-    <script src="qrng.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>

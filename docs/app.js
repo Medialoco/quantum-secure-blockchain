@@ -1,13 +1,19 @@
+import init, {
+  canonicalPayload,
+  fingerprintHex,
+  measureShot,
+  verifyFingerprint,
+} from "./pkg/chapter_companion.js";
+
 const COPY = {
   fr: {
-    kicker: "Chapter Companion",
-    title: "Intégrité des événements industriels, adossée à un aléa quantique",
-    lead: "Le pipeline de l’article, exécuté ici : un tirage sur le circuit QRNG, l’empreinte SHA-256 du triplet horodatage, preuve et métadonnée, puis l’ancrage dans un registre.",
+    title: "Chapter Companion",
+    lead: "Démo posée à côté du code Qiskit et Ethereum du chapitre. RustQIP fait la mesure. Le registre Rust rejoue les règles du contrat. Les deux tournent en WebAssembly.",
     step1: "Circuit",
     step2: "Empreinte",
     step3: "Registre",
     circuitTitle: "Mesurer le circuit",
-    circuitCaption: "Huit qubits, une porte de Hadamard, une mesure. Qubit 0 à droite, comme dans Qiskit.",
+    circuitCaption: "Huit qubits, une porte de Hadamard, une mesure. RustQIP. Le premier qubit est le bit de droite.",
     measure: "Mesurer — 1 shot",
     bitsLabel: "Bits mesurés",
     valueLabel: "Entier",
@@ -18,7 +24,7 @@ const COPY = {
     hashLabel: "SHA-256",
     record: "Ancrer dans le registre",
     ledgerTitle: "Registre local",
-    ledgerHint: "Mêmes règles que le contrat QSecure. L’empreinte est recalculée à partir des trois champs. L’heure d’ancrage, l’équivalent de block.timestamp, n’entre pas dans le hash. Ce registre reste dans le navigateur.",
+    ledgerHint: "Simulation Rust des règles de QSecure, pas un nœud Hardhat. L’empreinte est recalculée dans le module WebAssembly. L’heure d’ancrage n’entre pas dans le hash.",
     reset: "Effacer",
     empty: "Aucun événement ancré.",
     verifyOk: "conforme",
@@ -29,8 +35,8 @@ const COPY = {
     colMeta: "Métadonnée observée",
     colHash: "Empreinte stockée",
     colCheck: "Contrôle",
-    deviation: "Écart maximal à la distribution uniforme 1/256 :",
-    scope: "Cette page simule le circuit idéal, puis tire un résultat selon la règle de Born. Le script Python du dépôt fait la même mesure avec Qiskit Aer. Les deux chemins reproduisent le circuit de l’article. Ils ne sont pas une source quantique physique. Le message haché est exactement timestamp|preuve|métadonnée, en UTF-8, le même texte que celui recalculé dans le contrat Solidity.",
+    deviation: "Probabilité de Born de ce résultat :",
+    scope: "On assume RustQIP pour cette démo. Le script Qiskit et le contrat Hardhat du chapitre restent dans le dépôt, inchangés. Hardhat n’a pas d’équivalent dans la page : un nœud Ethereum ne tient pas dans le navigateur. Le registre est la simulation Rust des mêmes règles, compilée en WebAssembly. Ce n’est pas une source quantique physique.",
     needShot: "Mesurez le circuit avant d’ancrer un événement.",
     badTime: "L’horodatage doit être un entier positif ou nul.",
     badMeta: "La métadonnée ne peut pas être vide.",
@@ -38,14 +44,13 @@ const COPY = {
     selftestFail: "self-test en échec",
   },
   en: {
-    kicker: "Chapter Companion",
-    title: "Quantum-backed integrity for industrial blockchain events",
-    lead: "The paper’s pipeline, running here: one shot of the QRNG circuit, the SHA-256 fingerprint of timestamp, proof and metadata, then a ledger entry.",
+    title: "Chapter Companion",
+    lead: "A demo beside the chapter’s Qiskit and Ethereum code. RustQIP performs the measurement. The Rust ledger replays the contract rules. Both run as WebAssembly.",
     step1: "Circuit",
     step2: "Fingerprint",
     step3: "Ledger",
     circuitTitle: "Measure the circuit",
-    circuitCaption: "Eight qubits, one Hadamard each, then measurement. Qubit 0 is the rightmost bit, as in Qiskit.",
+    circuitCaption: "Eight qubits, one Hadamard each, then one measurement. RustQIP. The first qubit is the rightmost bit.",
     measure: "Measure — 1 shot",
     bitsLabel: "Measured bits",
     valueLabel: "Integer",
@@ -56,7 +61,7 @@ const COPY = {
     hashLabel: "SHA-256",
     record: "Anchor in the ledger",
     ledgerTitle: "Local ledger",
-    ledgerHint: "Same rules as the QSecure contract. The fingerprint is recomputed from the three fields. The anchor time, the stand-in for block.timestamp, is not part of the hash. This ledger stays in the browser.",
+    ledgerHint: "A Rust simulation of the QSecure rules, not a Hardhat node. The fingerprint is recomputed inside the WebAssembly module. The anchor time is not part of the hash.",
     reset: "Clear",
     empty: "No anchored event yet.",
     verifyOk: "matches",
@@ -67,8 +72,8 @@ const COPY = {
     colMeta: "Observed metadata",
     colHash: "Stored fingerprint",
     colCheck: "Check",
-    deviation: "Largest gap from the uniform 1/256 distribution:",
-    scope: "This page simulates the ideal circuit, then samples one outcome from the Born distribution. The repository’s Python script performs the same measurement with Qiskit Aer. Both paths reproduce the paper’s circuit. Neither is a physical quantum source. The hashed message is exactly timestamp|proof|metadata, UTF-8, the same text the Solidity contract recomputes.",
+    deviation: "Born probability of this outcome:",
+    scope: "This demo assumes RustQIP. The chapter’s Qiskit script and Hardhat contract stay in the repository, unchanged. Hardhat has no browser port: an Ethereum node does not belong in the page. The ledger is the Rust simulation of those same rules, compiled to WebAssembly. It is not a physical quantum source.",
     needShot: "Measure the circuit before anchoring an event.",
     badTime: "The timestamp must be a non-negative integer.",
     badMeta: "Metadata cannot be empty.",
@@ -113,6 +118,11 @@ const els = {
 
 els.metadata.value = SAMPLE;
 els.timestamp.value = String(Math.floor(Date.now() / 1000));
+els.measure.disabled = true;
+
+const ready = init().then(() => {
+  els.measure.disabled = false;
+});
 
 function text(key) {
   return COPY[state.lang][key];
@@ -168,8 +178,7 @@ function renderShot() {
     els.bits.append(item);
   });
   els.value.textContent = String(state.shot.value);
-  const gap = state.shot.uniformDeviation.toExponential(1);
-  els.deviation.textContent = `${text("deviation")} ${gap}`;
+  els.deviation.textContent = `${text("deviation")} ${state.shot.probability.toFixed(4)}`;
 }
 
 function readTimestamp() {
@@ -189,9 +198,10 @@ async function refreshFingerprint() {
     els.record.disabled = true;
     return;
   }
-  const body = Qrng.payload(timestamp, state.shot.value, metadata);
+  await ready;
+  const body = canonicalPayload(BigInt(timestamp), BigInt(state.shot.value), metadata);
   els.payload.textContent = body;
-  els.hash.textContent = await Qrng.sha256Hex(body);
+  els.hash.textContent = fingerprintHex(BigInt(timestamp), BigInt(state.shot.value), metadata);
   els.record.disabled = false;
 }
 
@@ -265,22 +275,27 @@ function cell(value, label, className) {
 }
 
 async function paintStatus(node, entry) {
-  let intact = false;
-  try {
-    const digest = await Qrng.sha256Hex(
-      Qrng.payload(entry.timestamp, entry.quantumProof, entry.observedMetadata)
-    );
-    intact = digest === entry.sha256 && entry.observedMetadata.length > 0;
-  } catch {
-    intact = false;
-  }
+  await ready;
+  const intact = verifyFingerprint(
+    BigInt(entry.timestamp),
+    BigInt(entry.quantumProof),
+    entry.observedMetadata,
+    entry.sha256
+  );
   node.className = intact ? "badge ok" : "badge bad";
   node.textContent = intact ? text("verifyOk") : text("verifyBad");
   return intact;
 }
 
-async function measure(random) {
-  state.shot = Qrng.measure(random ? { random } : undefined);
+async function measure() {
+  await ready;
+  const shot = measureShot();
+  state.shot = {
+    value: shot.value,
+    bitstring: shot.bitstring,
+    probability: shot.probability,
+  };
+  shot.free();
   renderShot();
   await refreshFingerprint();
 }
@@ -300,8 +315,8 @@ async function recordEvent() {
     els.error.textContent = text("badMeta");
     return;
   }
-  const body = Qrng.payload(timestamp, state.shot.value, metadata);
-  const sha256 = await Qrng.sha256Hex(body);
+  await ready;
+  const sha256 = fingerprintHex(BigInt(timestamp), BigInt(state.shot.value), metadata);
   state.ledger.push({
     id: state.ledger.length,
     timestamp,
@@ -339,18 +354,16 @@ async function selfTest() {
   const previous = localStorage.getItem(STORAGE_KEY);
   const failures = [];
   try {
-    const vector = await Qrng.sha256Hex(
-      Qrng.payload(1744230722, 214, "Component validated - Checkpoint A")
-    );
+    await ready;
+    const vector = fingerprintHex(1744230722n, 214n, "Component validated - Checkpoint A");
     if (vector !== "3fdde02648272556e7f8b9a6e1c4e801780e1dbe2541da1eec352d6107d524c3") {
       failures.push("vector");
     }
 
     state.ledger = [];
-    await measure(() => 0);
-    if (!state.shot || state.shot.bitstring !== "00000000" || state.shot.value !== 0) {
-      failures.push("shot");
-    }
+    await measure();
+    if (!state.shot || !/^[01]{8}$/.test(state.shot.bitstring)) failures.push("shot");
+    if (state.shot && Number.parseInt(state.shot.bitstring, 2) !== state.shot.value) failures.push("value");
     els.metadata.value = SAMPLE;
     els.timestamp.value = "1744230722";
     await refreshFingerprint();

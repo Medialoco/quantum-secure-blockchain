@@ -85,7 +85,7 @@ h1 {
   font-weight: 560;
   letter-spacing: -0.03em;
   line-height: 1.05;
-  max-width: 16ch;
+  max-width: 12ch;
 }
 
 .kicker, .lead, .cite, .quiet, figcaption, .scope, .label {
@@ -95,8 +95,7 @@ h1 {
 .kicker {
   margin: 18px 0 0;
   color: var(--red);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   font-size: 0.75rem;
   font-weight: 700;
 }
