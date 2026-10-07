@@ -60,9 +60,7 @@ This path is a classical simulation of the circuit on Aer, then a local Hardhat 
 
 ## Demo
 
-RustQIP runs the same eight-qubit circuit: one Hadamard per qubit, one measurement. The first qubit is the least significant bit. The Rust ledger recomputes the fingerprint, appends the event, and rejects a metadata edit that does not match the stored hash.
-
-Hardhat is a Node toolchain. It stays with the chapter code. The browser demo does not start a chain. What runs in the page is that Rust ledger, compiled to WebAssembly with the circuit.
+RustQIP runs the same eight-qubit circuit: one Hadamard per qubit, one measurement. The first qubit is the least significant bit. The page draws one shot when it opens and shows the SHA-256 of that event. Hardhat stays with the chapter code.
 
 ```bash
 cargo test --manifest-path demo/Cargo.toml
@@ -85,7 +83,7 @@ contracts/QSecure.sol          chapter contract
 scripts/setQuantum.js          Hardhat logging script
 test/                          contract tests and fingerprint vectors
 circuits/quantum_circuit.png   the 8-qubit figure
-demo/                          RustQIP measurement and Rust ledger
+demo/                          RustQIP measurement and fingerprint
 docs/                          Chapter Companion page
 docs/pkg/                      WebAssembly build of demo/
 ```
