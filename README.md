@@ -9,7 +9,7 @@ Chapter Companion du chapitre Springer. Le code Qiskit et Ethereum n’est pas m
 
 [QUEST-IS](https://conference-questis.org/quest-is-2025/program/2nd-december-2025/), EDF Lab Paris-Saclay.
 
-The live demo is [https://medialoco.github.io/quantum-secure-blockchain/](https://medialoco.github.io/quantum-secure-blockchain/). This page matches [chapter-companion-0.1.2](https://github.com/Medialoco/quantum-secure-blockchain/tree/chapter-companion-0.1.2). The circuit library is [RustQIP](https://github.com/Renmusxd/RustQIP).
+A very simple live demo here [https://medialoco.github.io/quantum-secure-blockchain/](https://medialoco.github.io/quantum-secure-blockchain/). This page matches [chapter-companion-0.1.2](https://github.com/Medialoco/quantum-secure-blockchain/tree/chapter-companion-0.1.2). The circuit library is [RustQIP](https://github.com/Renmusxd/RustQIP).
 
 ## Two trees
 
